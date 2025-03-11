@@ -42,7 +42,7 @@ const TenderDisplay: React.FC = () => {
   };
 
   const handleNextPage = () => {
-    if (data && data.pagination && !isPlaceholderData && page < Math.ceil(data.pagination.total / limit)) {
+    if (data?.pagination && !isPlaceholderData && page < Math.ceil(data.pagination.total / limit)) {
       setPage(old => old + 1);
     }
   };
@@ -71,7 +71,7 @@ const TenderDisplay: React.FC = () => {
         <>
           <div className="mb-4 flex justify-between items-center">
             <div className="text-sm text-muted-foreground">
-              Showing {data.data.length} of {data.pagination.total} notices
+              Showing {data.data.length} of {data.pagination?.total || 0} notices
             </div>
             <Button
               variant="outline"
@@ -85,7 +85,11 @@ const TenderDisplay: React.FC = () => {
 
           <div className="space-y-4">
             {data.data.map((notice, index) => (
-              <NoticeCard key={notice["publication-number"]} notice={notice} index={index} />
+              <NoticeCard 
+                key={`${notice["publication-number"]}-${index}`} 
+                notice={notice} 
+                index={index} 
+              />
             ))}
           </div>
 

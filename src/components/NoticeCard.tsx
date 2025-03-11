@@ -9,13 +9,24 @@ interface NoticeCardProps {
 }
 
 const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
-  const formattedPublicationDate = formatDate(notice["publication-date"]);
+  // Safely handle publication date
+  const formattedPublicationDate = notice["publication-date"] 
+    ? formatDate(notice["publication-date"]) 
+    : "Not specified";
+  
+  // Safely handle deadline
   const formattedDeadline = notice["deadline-receipt-request"] 
     ? formatDate(notice["deadline-receipt-request"]) 
     : "Not specified";
 
   // Calculate animation delay based on index
   const animationDelay = `${index * 0.05}s`;
+
+  // Extract place of performance safely
+  const placeOfPerformance = notice["place-of-performance"] || { country: "", town: "", nuts: "" };
+  const locationTown = placeOfPerformance.town || "Not specified";
+  const locationCountry = placeOfPerformance.country || "Not specified";
+  const locationNuts = placeOfPerformance.nuts;
 
   return (
     <div 
@@ -25,10 +36,10 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-            {notice["publication-number"]}
+            {notice["publication-number"] || "No ID"}
           </span>
           <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-            {notice["contract-nature"]}
+            {notice["contract-nature"] || "Unknown type"}
           </span>
         </div>
         <span className="text-sm text-muted-foreground">
@@ -36,18 +47,20 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
         </span>
       </div>
       
-      <h3 className="text-lg font-medium leading-tight mb-2">{notice["notice-title"]}</h3>
+      <h3 className="text-lg font-medium leading-tight mb-2">
+        {notice["notice-title"] || "Untitled Tender"}
+      </h3>
       
       <div className="text-sm text-muted-foreground mb-4">
         <div className="flex flex-wrap gap-y-1">
           <div className="w-full sm:w-1/2">
-            <span className="font-medium text-foreground">Buyer:</span> {notice["buyer-name"]}
+            <span className="font-medium text-foreground">Buyer:</span> {notice["buyer-name"] || "Not specified"}
           </div>
           <div className="w-full sm:w-1/2">
-            <span className="font-medium text-foreground">Country:</span> {notice["buyer-country"]}
+            <span className="font-medium text-foreground">Country:</span> {notice["buyer-country"] || "Not specified"}
           </div>
           <div className="w-full sm:w-1/2">
-            <span className="font-medium text-foreground">Procedure:</span> {notice["procedure-type"]}
+            <span className="font-medium text-foreground">Procedure:</span> {notice["procedure-type"] || "Not specified"}
           </div>
           <div className="w-full sm:w-1/2">
             <span className="font-medium text-foreground">Deadline:</span> {formattedDeadline}
@@ -55,11 +68,11 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
         </div>
       </div>
       
-      {notice["place-of-performance"] && (
+      {placeOfPerformance && (locationTown || locationCountry) && (
         <div className="text-sm p-3 rounded bg-secondary/50">
-          <span className="font-medium text-foreground">Location:</span> {notice["place-of-performance"].town}, {notice["place-of-performance"].country}
-          {notice["place-of-performance"].nuts && (
-            <span className="text-xs text-muted-foreground ml-1">({notice["place-of-performance"].nuts})</span>
+          <span className="font-medium text-foreground">Location:</span> {locationTown}, {locationCountry}
+          {locationNuts && (
+            <span className="text-xs text-muted-foreground ml-1">({locationNuts})</span>
           )}
         </div>
       )}
