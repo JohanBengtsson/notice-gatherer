@@ -78,32 +78,45 @@ serve(async (req) => {
 
     // Get the TED API response
     const tedData = await tedResponse.json();
-    console.log("TED API response received");
+    console.log("TED API response received:", JSON.stringify(tedData).substring(0, 200) + "...");
     
     // Transform the TED API response to match our expected format
+    // First, let's log the actual structure to help with debugging
+    if (tedData.results && tedData.results.length > 0) {
+      console.log("Sample result item structure:", JSON.stringify(tedData.results[0]).substring(0, 300) + "...");
+    }
+    
     const transformedData = {
-      data: tedData.results?.map((item: any) => ({
-        "publication-number": item.publicationNumber || "",
-        "place-of-performance": {
-          country: item.placeOfPerformance?.country || "",
-          town: item.placeOfPerformance?.town || "",
-          nuts: item.placeOfPerformance?.nuts || ""
-        },
-        "procedure-type": item.procedureType || "",
-        "contract-nature": item.contractNature || "",
-        "buyer-name": item.buyerName || "",
-        "buyer-country": item.buyerCountry || "",
-        "publication-date": item.publicationDate || "",
-        "deadline-receipt-request": item.deadlineReceiptRequest || null,
-        "notice-title": item.noticeTitle || "",
-        "official-language": item.officialLanguage || "",
-        "notice-type": item.noticeType || "",
-        "BT-21-Procedure": item.bt21Procedure || "",
-        "BT-24-Procedure": item.bt24Procedure || ""
-      })) || [],
+      data: tedData.results?.map((item: any) => {
+        // Log each field to understand the mapping better
+        console.log(`Processing item with publication number: ${item.publicationNumber || item['publication-number'] || 'unknown'}`);
+        
+        return {
+          "publication-number": item.publicationNumber || item['publication-number'] || "",
+          "place-of-performance": {
+            country: item.placeOfPerformance?.country || 
+                   (item['place-of-performance'] ? item['place-of-performance'].country : ""),
+            town: item.placeOfPerformance?.town || 
+                 (item['place-of-performance'] ? item['place-of-performance'].town : ""),
+            nuts: item.placeOfPerformance?.nuts || 
+                (item['place-of-performance'] ? item['place-of-performance'].nuts : "")
+          },
+          "procedure-type": item.procedureType || item['procedure-type'] || "",
+          "contract-nature": item.contractNature || item['contract-nature'] || "",
+          "buyer-name": item.buyerName || item['buyer-name'] || "",
+          "buyer-country": item.buyerCountry || item['buyer-country'] || "",
+          "publication-date": item.publicationDate || item['publication-date'] || "",
+          "deadline-receipt-request": item.deadlineReceiptRequest || item['deadline-receipt-request'] || null,
+          "notice-title": item.noticeTitle || item['notice-title'] || "",
+          "official-language": item.officialLanguage || item['official-language'] || "",
+          "notice-type": item.noticeType || item['notice-type'] || "",
+          "BT-21-Procedure": item.bt21Procedure || item['BT-21-Procedure'] || "",
+          "BT-24-Procedure": item.bt24Procedure || item['BT-24-Procedure'] || ""
+        };
+      }) || [],
       pagination: {
         page: tedData.page || page,
-        limit: tedData.pageSize || limit,
+        limit: tedData.pageSize || tedData.limit || limit,
         total: tedData.total || 0
       }
     };
