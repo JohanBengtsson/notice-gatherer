@@ -28,24 +28,45 @@ serve(async (req) => {
       body = { page: 1, limit: 5 };
     }
     
-    const { page = 1, limit = 5 } = body;
+    const { page = 1, limit = 5, query } = body;
     
     // Construct the request to the TED API
     const tedApiUrl = "https://api.ted.europa.eu/v3/notices/search";
-    console.log(`Calling TED API: ${tedApiUrl} with POST method, page=${page}&pageSize=${limit}`);
     
-    // Change from GET to POST method
+    // Prepare the API request body based on the curl command
+    const requestBody = {
+      query: query || "buyer-country=SWE AND publication-date > 20250310 SORT BY publication-number DESC",
+      page: page,
+      limit: limit,
+      fields: [
+        "BT-21-Procedure",
+        "BT-24-Procedure",
+        "publication-number",
+        "place-of-performance",
+        "procedure-type",
+        "contract-nature",
+        "buyer-name",
+        "buyer-country",
+        "publication-date",
+        "deadline-receipt-request",
+        "notice-title",
+        "official-language",
+        "notice-type"
+      ],
+      scope: "ACTIVE",
+      onlyLatestVersions: false
+    };
+    
+    console.log(`Calling TED API: ${tedApiUrl} with POST method and query: ${requestBody.query}`);
+    
     const tedResponse = await fetch(tedApiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Add any required TED API authentication headers here if needed
+        "accept": "application/json, text/plain, */*",
+        "referer": "https://ted.europa.eu/"
       },
-      body: JSON.stringify({
-        page: page,
-        pageSize: limit
-        // Add any other required parameters for the TED API here
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     console.log(`TED API response status: ${tedResponse.status}`);
