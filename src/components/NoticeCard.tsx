@@ -28,6 +28,55 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
   const locationCountry = placeOfPerformance.country || "Not specified";
   const locationNuts = placeOfPerformance.nuts;
 
+  // Extract buyer name - prefer English, then Swedish, then first available language
+  const extractBuyerName = () => {
+    if (!notice["buyer-name"]) return "Not specified";
+    
+    const nameObj = notice["buyer-name"];
+    if (nameObj.eng && nameObj.eng.length > 0) return nameObj.eng[0];
+    if (nameObj.swe && nameObj.swe.length > 0) return nameObj.swe[0];
+    
+    // Get first available language
+    const firstLang = Object.keys(nameObj)[0];
+    return firstLang && nameObj[firstLang].length > 0 ? nameObj[firstLang][0] : "Not specified";
+  };
+
+  // Extract the title - prefer English, then Swedish, then first available language
+  const extractTitle = () => {
+    if (!notice["notice-title"]) return "Untitled Tender";
+    
+    const titleObj = notice["notice-title"];
+    if (titleObj.eng) return titleObj.eng;
+    if (titleObj.swe) return titleObj.swe;
+    
+    // Get first available language
+    const firstLang = Object.keys(titleObj)[0];
+    return firstLang ? titleObj[firstLang] : "Untitled Tender";
+  };
+
+  // Handle contract nature which can be string or array
+  const getContractNature = () => {
+    const nature = notice["contract-nature"];
+    if (!nature) return "Unknown type";
+    if (Array.isArray(nature)) return nature[0];
+    return nature;
+  };
+
+  // Handle procedure type which can be string or array
+  const getProcedureType = () => {
+    const type = notice["procedure-type"];
+    if (!type) return "Not specified";
+    if (Array.isArray(type)) return type[0];
+    return type;
+  };
+
+  // Extract buyer country
+  const getBuyerCountry = () => {
+    const country = notice["buyer-country"];
+    if (!country || !Array.isArray(country) || country.length === 0) return "Not specified";
+    return country[0];
+  };
+
   return (
     <div 
       className="notice-card p-6 animate-fade-up"
@@ -39,7 +88,7 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
             {notice["publication-number"] || "No ID"}
           </span>
           <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-            {notice["contract-nature"] || "Unknown type"}
+            {getContractNature()}
           </span>
         </div>
         <span className="text-sm text-muted-foreground">
@@ -48,19 +97,19 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
       </div>
       
       <h3 className="text-lg font-medium leading-tight mb-2">
-        {notice["notice-title"] || "Untitled Tender"}
+        {extractTitle()}
       </h3>
       
       <div className="text-sm text-muted-foreground mb-4">
         <div className="flex flex-wrap gap-y-1">
           <div className="w-full sm:w-1/2">
-            <span className="font-medium text-foreground">Buyer:</span> {notice["buyer-name"] || "Not specified"}
+            <span className="font-medium text-foreground">Buyer:</span> {extractBuyerName()}
           </div>
           <div className="w-full sm:w-1/2">
-            <span className="font-medium text-foreground">Country:</span> {notice["buyer-country"] || "Not specified"}
+            <span className="font-medium text-foreground">Country:</span> {getBuyerCountry()}
           </div>
           <div className="w-full sm:w-1/2">
-            <span className="font-medium text-foreground">Procedure:</span> {notice["procedure-type"] || "Not specified"}
+            <span className="font-medium text-foreground">Procedure:</span> {getProcedureType()}
           </div>
           <div className="w-full sm:w-1/2">
             <span className="font-medium text-foreground">Deadline:</span> {formattedDeadline}

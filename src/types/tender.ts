@@ -13,17 +13,25 @@ export interface Pagination {
 export interface TedNotice {
   "publication-number": string;
   "place-of-performance"?: PlaceOfPerformance;
-  "procedure-type"?: string;
-  "contract-nature"?: string;
-  "buyer-name"?: string;
-  "buyer-country"?: string;
+  "procedure-type"?: string | string[];
+  "contract-nature"?: string | string[];
+  "buyer-name"?: {
+    [languageCode: string]: string[];
+  };
+  "buyer-country"?: string[];
   "publication-date"?: string;
   "deadline-receipt-request"?: string | null;
-  "notice-title"?: string;
-  "official-language"?: string;
+  "notice-title"?: {
+    [languageCode: string]: string;
+  };
+  "official-language"?: string[];
   "notice-type"?: string;
-  "BT-21-Procedure"?: string;
-  "BT-24-Procedure"?: string;
+  "BT-21-Procedure"?: {
+    [languageCode: string]: string;
+  };
+  "BT-24-Procedure"?: {
+    [languageCode: string]: string;
+  };
 }
 
 export interface PlaceOfPerformance {

@@ -86,7 +86,7 @@ const TenderDisplay: React.FC = () => {
           <div className="space-y-4">
             {data.data.map((notice, index) => (
               <NoticeCard 
-                key={`${notice["publication-number"]}-${index}`} 
+                key={`${notice["publication-number"] || index}-${index}`} 
                 notice={notice} 
                 index={index} 
               />
