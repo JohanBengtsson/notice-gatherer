@@ -16,12 +16,13 @@ const TenderDisplay: React.FC = () => {
     isLoading, 
     isError, 
     error,
-    isPreviousData,
+    isPending,
+    isPlaceholderData,
     refetch
   } = useQuery({
     queryKey: ['tedNotices', page, limit],
     queryFn: () => fetchTedNotices(page, limit),
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
     retry: 1,
   });
 
@@ -40,7 +41,7 @@ const TenderDisplay: React.FC = () => {
   };
 
   const handleNextPage = () => {
-    if (data && data.pagination && !isPreviousData && page < Math.ceil(data.pagination.total / limit)) {
+    if (data && data.pagination && !isPlaceholderData && page < Math.ceil(data.pagination.total / limit)) {
       setPage(old => old + 1);
     }
   };
@@ -92,7 +93,7 @@ const TenderDisplay: React.FC = () => {
               variant="outline"
               size="sm"
               onClick={handlePrevPage}
-              disabled={!canGoBack || isPreviousData}
+              disabled={!canGoBack || isPending}
             >
               Previous
             </Button>
@@ -103,7 +104,7 @@ const TenderDisplay: React.FC = () => {
               variant="outline"
               size="sm"
               onClick={handleNextPage}
-              disabled={!canGoNext || isPreviousData}
+              disabled={!canGoNext || isPending}
             >
               Next
             </Button>
