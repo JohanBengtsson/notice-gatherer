@@ -1,19 +1,14 @@
 
 import { TedResponse } from "../types/tender";
-import { proxyTedNotices } from "../api/tedApi";
 
 export const fetchTedNotices = async (page = 1, limit = 5): Promise<TedResponse> => {
   try {
-    // Use our proxy function instead of direct fetch to TED API
-    return await proxyTedNotices(page, limit);
-    
-    /* 
-    In a real production environment with a proper backend, you would do something like:
-    
-    const response = await fetch("/api/ted-notices", {
+    // Call our Supabase Edge Function
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/ted-proxy`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
       },
       body: JSON.stringify({ page, limit }),
     });
@@ -23,7 +18,6 @@ export const fetchTedNotices = async (page = 1, limit = 5): Promise<TedResponse>
     }
 
     return await response.json();
-    */
   } catch (error) {
     console.error("Error fetching TED notices:", error);
     throw error;

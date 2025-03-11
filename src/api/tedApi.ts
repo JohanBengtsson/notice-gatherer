@@ -1,7 +1,7 @@
 
 import { TedResponse } from "../types/tender";
 
-// This simulates a server-side endpoint that would proxy the request to TED API
+// This is now used only as a fallback in the Edge Function if the TED API is unavailable
 export const proxyTedNotices = async (page = 1, limit = 5): Promise<TedResponse> => {
   // In a real production app, this would be a server endpoint, not browser-side code
   // For demo purposes, we're returning mock data with the same structure as the API
