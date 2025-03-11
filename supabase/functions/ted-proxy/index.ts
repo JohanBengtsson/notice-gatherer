@@ -56,7 +56,6 @@ serve(async (req) => {
     console.log("TED API response received");
     
     // Transform the TED API response to match our expected format
-    // Note: You'll need to adjust this mapping based on the actual TED API response structure
     const transformedData = {
       data: tedData.results?.map((item: any) => ({
         "publication-number": item.publicationNumber || "",
@@ -92,28 +91,40 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error in TED API proxy:", error);
     
-    // If the TED API is unavailable, return fallback mock data
-    // Import using dynamic import to handle ESM modules in Deno
-    try {
-      const mockDataModule = await import("../../../src/api/tedApi.ts");
-      console.log("Using fallback mock data");
-      const mockData = await mockDataModule.proxyTedNotices(1, 5);
-      
-      return new Response(JSON.stringify(mockData), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      });
-    } catch (fallbackError) {
-      console.error("Error loading fallback data:", fallbackError);
-      
-      // Provide a minimal fallback if everything else fails
-      return new Response(JSON.stringify({
-        data: [],
-        pagination: { page: 1, limit: 5, total: 0 }
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      });
-    }
+    // Use fallback mock data
+    const mockData = {
+      data: [
+        {
+          "publication-number": "2025/S 123-456789",
+          "place-of-performance": {
+            "country": "Sweden",
+            "town": "Stockholm",
+            "nuts": "SE110"
+          },
+          "procedure-type": "Open procedure",
+          "contract-nature": "Services",
+          "buyer-name": "City of Stockholm",
+          "buyer-country": "SWE",
+          "publication-date": "2025-03-11",
+          "deadline-receipt-request": "2025-04-15",
+          "notice-title": "IT System Maintenance Services (Fallback)",
+          "official-language": "SV",
+          "notice-type": "Contract notice",
+          "BT-21-Procedure": "OPEN",
+          "BT-24-Procedure": "ELECTRONIC"
+        },
+        // Add more mock data here as needed
+      ],
+      pagination: {
+        page: 1,
+        limit: 5,
+        total: 42
+      }
+    };
+    
+    return new Response(JSON.stringify(mockData), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
   }
 });

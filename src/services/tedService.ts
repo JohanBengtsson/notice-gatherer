@@ -3,15 +3,19 @@ import { TedResponse } from "../types/tender";
 
 export const fetchTedNotices = async (page = 1, limit = 5): Promise<TedResponse> => {
   try {
-    console.log("Calling Supabase Edge Function with URL:", `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/ted-proxy`);
-    console.log("Using auth token:", import.meta.env.VITE_SUPABASE_ANON_KEY ? "Available" : "Not available");
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseFunctionUrl = `${supabaseUrl}/functions/v1/ted-proxy`;
+    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    
+    console.log("Calling Supabase Edge Function with URL:", supabaseFunctionUrl);
+    console.log("Using auth token:", anonKey ? "Available" : "Not available");
     
     // Call our Supabase Edge Function
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/ted-proxy`, {
+    const response = await fetch(supabaseFunctionUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        "Authorization": `Bearer ${anonKey}`
       },
       body: JSON.stringify({ page, limit }),
     });
