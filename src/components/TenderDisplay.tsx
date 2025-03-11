@@ -23,7 +23,8 @@ const TenderDisplay: React.FC = () => {
     queryKey: ['tedNotices', page, limit],
     queryFn: () => fetchTedNotices(page, limit),
     placeholderData: (previousData) => previousData,
-    retry: 1,
+    retry: 2,
+    retryDelay: 1000,
   });
 
   useEffect(() => {

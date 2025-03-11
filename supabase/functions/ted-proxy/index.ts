@@ -7,6 +7,8 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
+  console.log("Ted-proxy Edge Function received request:", req.method);
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -16,10 +18,21 @@ serve(async (req) => {
   }
 
   try {
-    const { page = 1, limit = 5 } = await req.json();
+    // Parse the request body
+    let body;
+    try {
+      body = await req.json();
+      console.log("Request body:", body);
+    } catch (e) {
+      console.error("Error parsing request body:", e);
+      body = { page: 1, limit: 5 };
+    }
+    
+    const { page = 1, limit = 5 } = body;
     
     // Construct the request to the TED API
     const tedApiUrl = "https://api.ted.europa.eu/v3/notices/search";
+    console.log(`Calling TED API: ${tedApiUrl}?page=${page}&pageSize=${limit}`);
     
     // For demo purposes, we're using a simple request
     // This can be expanded with more sophisticated parameters as needed
@@ -31,17 +44,21 @@ serve(async (req) => {
       },
     });
 
+    console.log(`TED API response status: ${tedResponse.status}`);
+
     if (!tedResponse.ok) {
+      console.error(`TED API request failed with status ${tedResponse.status}`);
       throw new Error(`TED API request failed with status ${tedResponse.status}`);
     }
 
     // Get the TED API response
     const tedData = await tedResponse.json();
+    console.log("TED API response received");
     
     // Transform the TED API response to match our expected format
     // Note: You'll need to adjust this mapping based on the actual TED API response structure
     const transformedData = {
-      data: tedData.results.map((item: any) => ({
+      data: tedData.results?.map((item: any) => ({
         "publication-number": item.publicationNumber || "",
         "place-of-performance": {
           country: item.placeOfPerformance?.country || "",
@@ -59,7 +76,7 @@ serve(async (req) => {
         "notice-type": item.noticeType || "",
         "BT-21-Procedure": item.bt21Procedure || "",
         "BT-24-Procedure": item.bt24Procedure || ""
-      })),
+      })) || [],
       pagination: {
         page: tedData.page || page,
         limit: tedData.pageSize || limit,
@@ -76,14 +93,27 @@ serve(async (req) => {
     console.error("Error in TED API proxy:", error);
     
     // If the TED API is unavailable, return fallback mock data
-    // This ensures the frontend still works even if the API is down
-    const mockData = await import("../../../src/api/tedApi.ts").then(
-      module => module.proxyTedNotices(1, 5)
-    );
-    
-    return new Response(JSON.stringify(mockData), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
+    // Import using dynamic import to handle ESM modules in Deno
+    try {
+      const mockDataModule = await import("../../../src/api/tedApi.ts");
+      console.log("Using fallback mock data");
+      const mockData = await mockDataModule.proxyTedNotices(1, 5);
+      
+      return new Response(JSON.stringify(mockData), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    } catch (fallbackError) {
+      console.error("Error loading fallback data:", fallbackError);
+      
+      // Provide a minimal fallback if everything else fails
+      return new Response(JSON.stringify({
+        data: [],
+        pagination: { page: 1, limit: 5, total: 0 }
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
   }
 });
