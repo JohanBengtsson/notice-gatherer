@@ -32,16 +32,20 @@ serve(async (req) => {
     
     // Construct the request to the TED API
     const tedApiUrl = "https://api.ted.europa.eu/v3/notices/search";
-    console.log(`Calling TED API: ${tedApiUrl}?page=${page}&pageSize=${limit}`);
+    console.log(`Calling TED API: ${tedApiUrl} with POST method, page=${page}&pageSize=${limit}`);
     
-    // For demo purposes, we're using a simple request
-    // This can be expanded with more sophisticated parameters as needed
-    const tedResponse = await fetch(`${tedApiUrl}?page=${page}&pageSize=${limit}`, {
-      method: "GET",
+    // Change from GET to POST method
+    const tedResponse = await fetch(tedApiUrl, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         // Add any required TED API authentication headers here if needed
       },
+      body: JSON.stringify({
+        page: page,
+        pageSize: limit
+        // Add any other required parameters for the TED API here
+      }),
     });
 
     console.log(`TED API response status: ${tedResponse.status}`);
