@@ -80,16 +80,18 @@ serve(async (req) => {
     const tedData = await tedResponse.json();
     console.log("TED API response received:", JSON.stringify(tedData).substring(0, 200) + "...");
     
-    // Transform the TED API response to match our expected format
-    // First, let's log the actual structure to help with debugging
-    if (tedData.results && tedData.results.length > 0) {
-      console.log("Sample result item structure:", JSON.stringify(tedData.results[0]).substring(0, 300) + "...");
+    // Log the structure of the TED API response to help with debugging
+    console.log("TED API response structure:", Object.keys(tedData));
+    
+    // Check if a sample notice is available for debugging
+    if (tedData.notices && tedData.notices.length > 0) {
+      console.log("Sample notice structure:", JSON.stringify(tedData.notices[0]).substring(0, 300) + "...");
     }
     
     const transformedData = {
-      data: tedData.results?.map((item: any) => {
-        // Log each field to understand the mapping better
-        console.log(`Processing item with publication number: ${item.publicationNumber || item['publication-number'] || 'unknown'}`);
+      data: tedData.notices?.map((item: any) => {
+        // Log each notice to understand the mapping better
+        console.log(`Processing notice with publication number: ${item.publicationNumber || item['publication-number'] || 'unknown'}`);
         
         return {
           "publication-number": item.publicationNumber || item['publication-number'] || "",
@@ -115,9 +117,9 @@ serve(async (req) => {
         };
       }) || [],
       pagination: {
-        page: tedData.page || page,
-        limit: tedData.pageSize || tedData.limit || limit,
-        total: tedData.total || 0
+        page: tedData.metadata?.currentPage || tedData.page || page,
+        limit: tedData.metadata?.itemsPerPage || tedData.pageSize || tedData.limit || limit,
+        total: tedData.metadata?.totalItems || tedData.total || 0
       }
     };
 
