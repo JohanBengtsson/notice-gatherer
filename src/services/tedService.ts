@@ -1,37 +1,21 @@
 
 import { TedResponse } from "../types/tender";
+import { proxyTedNotices } from "../api/tedApi";
 
 export const fetchTedNotices = async (page = 1, limit = 5): Promise<TedResponse> => {
   try {
-    const response = await fetch("https://api.ted.europa.eu/v3/notices/search", {
+    // Use our proxy function instead of direct fetch to TED API
+    return await proxyTedNotices(page, limit);
+    
+    /* 
+    In a real production environment with a proper backend, you would do something like:
+    
+    const response = await fetch("/api/ted-notices", {
       method: "POST",
       headers: {
-        "Accept": "application/json, text/plain, */*",
         "Content-Type": "application/json",
-        "Referer": "https://ted.europa.eu/"
       },
-      body: JSON.stringify({
-        query: "buyer-country=SWE AND publication-date > 20250310 SORT BY publication-number DESC",
-        page,
-        limit,
-        fields: [
-          "BT-21-Procedure",
-          "BT-24-Procedure",
-          "publication-number",
-          "place-of-performance",
-          "procedure-type",
-          "contract-nature",
-          "buyer-name",
-          "buyer-country",
-          "publication-date",
-          "deadline-receipt-request",
-          "notice-title",
-          "official-language",
-          "notice-type"
-        ],
-        scope: "ACTIVE",
-        onlyLatestVersions: false
-      })
+      body: JSON.stringify({ page, limit }),
     });
 
     if (!response.ok) {
@@ -39,6 +23,7 @@ export const fetchTedNotices = async (page = 1, limit = 5): Promise<TedResponse>
     }
 
     return await response.json();
+    */
   } catch (error) {
     console.error("Error fetching TED notices:", error);
     throw error;
