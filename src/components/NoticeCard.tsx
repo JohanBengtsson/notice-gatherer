@@ -28,11 +28,13 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
   const locationCountry = placeOfPerformance.country || "Not specified";
   const locationNuts = placeOfPerformance.nuts;
 
-  // Extract buyer name - prefer English, then Swedish, then first available language
+  // Extract buyer name - handle both string and object formats
   const extractBuyerName = () => {
     if (!notice["buyer-name"]) return "Not specified";
     
     const nameObj = notice["buyer-name"];
+    if (typeof nameObj === 'string') return nameObj;
+    
     if (nameObj.eng && nameObj.eng.length > 0) return nameObj.eng[0];
     if (nameObj.swe && nameObj.swe.length > 0) return nameObj.swe[0];
     
@@ -41,11 +43,13 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
     return firstLang && nameObj[firstLang].length > 0 ? nameObj[firstLang][0] : "Not specified";
   };
 
-  // Extract the title - prefer English, then Swedish, then first available language
+  // Extract the title - handle both string and object formats
   const extractTitle = () => {
     if (!notice["notice-title"]) return "Untitled Tender";
     
     const titleObj = notice["notice-title"];
+    if (typeof titleObj === 'string') return titleObj;
+    
     if (titleObj.eng) return titleObj.eng;
     if (titleObj.swe) return titleObj.swe;
     
@@ -70,11 +74,13 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index }) => {
     return type;
   };
 
-  // Extract buyer country
+  // Extract buyer country - handle both string and array formats
   const getBuyerCountry = () => {
     const country = notice["buyer-country"];
-    if (!country || !Array.isArray(country) || country.length === 0) return "Not specified";
-    return country[0];
+    if (!country) return "Not specified";
+    if (typeof country === 'string') return country;
+    if (Array.isArray(country) && country.length > 0) return country[0];
+    return "Not specified";
   };
 
   return (

@@ -18,15 +18,23 @@ export const proxyTedNotices = async (page = 1, limit = 5): Promise<TedResponse>
         },
         "procedure-type": "Open procedure",
         "contract-nature": "Services",
-        "buyer-name": "City of Stockholm",
-        "buyer-country": "SWE",
+        "buyer-name": {
+          "eng": ["City of Stockholm"]
+        },
+        "buyer-country": ["SWE"],
         "publication-date": "2025-03-11",
         "deadline-receipt-request": "2025-04-15",
-        "notice-title": "IT System Maintenance Services",
-        "official-language": "SV",
+        "notice-title": {
+          "eng": "IT System Maintenance Services"
+        },
+        "official-language": ["SV"],
         "notice-type": "Contract notice",
-        "BT-21-Procedure": "OPEN",
-        "BT-24-Procedure": "ELECTRONIC"
+        "BT-21-Procedure": {
+          "eng": "OPEN"
+        },
+        "BT-24-Procedure": {
+          "eng": "ELECTRONIC"
+        }
       },
       {
         "publication-number": "2025/S 123-456788",
@@ -37,15 +45,23 @@ export const proxyTedNotices = async (page = 1, limit = 5): Promise<TedResponse>
         },
         "procedure-type": "Restricted procedure",
         "contract-nature": "Supplies",
-        "buyer-name": "Gothenburg Municipality",
-        "buyer-country": "SWE",
+        "buyer-name": {
+          "eng": ["Gothenburg Municipality"]
+        },
+        "buyer-country": ["SWE"],
         "publication-date": "2025-03-10",
         "deadline-receipt-request": "2025-04-10",
-        "notice-title": "Medical Equipment Procurement",
-        "official-language": "SV",
+        "notice-title": {
+          "eng": "Medical Equipment Procurement"
+        },
+        "official-language": ["SV"],
         "notice-type": "Contract notice",
-        "BT-21-Procedure": "RESTRICTED",
-        "BT-24-Procedure": "ELECTRONIC"
+        "BT-21-Procedure": {
+          "eng": "RESTRICTED"
+        },
+        "BT-24-Procedure": {
+          "eng": "ELECTRONIC"
+        }
       },
       {
         "publication-number": "2025/S 123-456787",
@@ -56,15 +72,23 @@ export const proxyTedNotices = async (page = 1, limit = 5): Promise<TedResponse>
         },
         "procedure-type": "Open procedure",
         "contract-nature": "Works",
-        "buyer-name": "Malmö City Council",
-        "buyer-country": "SWE",
+        "buyer-name": {
+          "eng": ["Malmö City Council"]
+        },
+        "buyer-country": ["SWE"],
         "publication-date": "2025-03-09",
         "deadline-receipt-request": "2025-04-20",
-        "notice-title": "Public Transport Infrastructure Development",
-        "official-language": "SV",
+        "notice-title": {
+          "eng": "Public Transport Infrastructure Development"
+        },
+        "official-language": ["SV"],
         "notice-type": "Contract notice",
-        "BT-21-Procedure": "OPEN",
-        "BT-24-Procedure": "ELECTRONIC"
+        "BT-21-Procedure": {
+          "eng": "OPEN"
+        },
+        "BT-24-Procedure": {
+          "eng": "ELECTRONIC"
+        }
       },
       {
         "publication-number": "2025/S 123-456786",
@@ -75,15 +99,23 @@ export const proxyTedNotices = async (page = 1, limit = 5): Promise<TedResponse>
         },
         "procedure-type": "Competitive dialogue",
         "contract-nature": "Services",
-        "buyer-name": "Uppsala County",
-        "buyer-country": "SWE",
+        "buyer-name": {
+          "eng": ["Uppsala County"]
+        },
+        "buyer-country": ["SWE"],
         "publication-date": "2025-03-08",
         "deadline-receipt-request": "2025-04-12",
-        "notice-title": "Smart City Solutions Implementation",
-        "official-language": "SV",
+        "notice-title": {
+          "eng": "Smart City Solutions Implementation"
+        },
+        "official-language": ["SV"],
         "notice-type": "Contract notice",
-        "BT-21-Procedure": "COMPETITIVE_DIALOGUE",
-        "BT-24-Procedure": "ELECTRONIC"
+        "BT-21-Procedure": {
+          "eng": "COMPETITIVE_DIALOGUE"
+        },
+        "BT-24-Procedure": {
+          "eng": "ELECTRONIC"
+        }
       },
       {
         "publication-number": "2025/S 123-456785",
@@ -94,15 +126,23 @@ export const proxyTedNotices = async (page = 1, limit = 5): Promise<TedResponse>
         },
         "procedure-type": "Open procedure",
         "contract-nature": "Services",
-        "buyer-name": "Umeå University",
-        "buyer-country": "SWE",
+        "buyer-name": {
+          "eng": ["Umeå University"]
+        },
+        "buyer-country": ["SWE"],
         "publication-date": "2025-03-07",
         "deadline-receipt-request": "2025-04-05",
-        "notice-title": "Research Equipment and Laboratory Services",
-        "official-language": "SV",
+        "notice-title": {
+          "eng": "Research Equipment and Laboratory Services"
+        },
+        "official-language": ["SV"],
         "notice-type": "Contract notice",
-        "BT-21-Procedure": "OPEN",
-        "BT-24-Procedure": "ELECTRONIC"
+        "BT-21-Procedure": {
+          "eng": "OPEN"
+        },
+        "BT-24-Procedure": {
+          "eng": "ELECTRONIC"
+        }
       }
     ],
     pagination: {

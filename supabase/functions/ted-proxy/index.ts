@@ -143,16 +143,24 @@ serve(async (req) => {
           },
           "procedure-type": "Open procedure",
           "contract-nature": "Services",
-          "buyer-name": "City of Stockholm",
-          "buyer-country": "SWE",
+          "buyer-name": {
+            "eng": ["City of Stockholm"]
+          },
+          "buyer-country": ["SWE"],
           "publication-date": "2025-03-11",
           "deadline-receipt-request": "2025-04-15",
-          "notice-title": "IT System Maintenance Services (Fallback)",
-          "official-language": "SV",
+          "notice-title": {
+            "eng": "IT System Maintenance Services (Fallback)"
+          },
+          "official-language": ["SV"],
           "notice-type": "Contract notice",
-          "BT-21-Procedure": "OPEN",
-          "BT-24-Procedure": "ELECTRONIC"
-        },
+          "BT-21-Procedure": {
+            "eng": "OPEN"
+          },
+          "BT-24-Procedure": {
+            "eng": "ELECTRONIC"
+          }
+        }
         // Add more mock data here as needed
       ],
       pagination: {

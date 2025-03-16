@@ -17,21 +17,21 @@ export interface TedNotice {
   "contract-nature"?: string | string[];
   "buyer-name"?: {
     [languageCode: string]: string[];
-  };
-  "buyer-country"?: string[];
+  } | string;
+  "buyer-country"?: string[] | string;
   "publication-date"?: string;
   "deadline-receipt-request"?: string | null;
   "notice-title"?: {
     [languageCode: string]: string;
-  };
-  "official-language"?: string[];
+  } | string;
+  "official-language"?: string[] | string;
   "notice-type"?: string;
   "BT-21-Procedure"?: {
     [languageCode: string]: string;
-  };
+  } | string;
   "BT-24-Procedure"?: {
     [languageCode: string]: string;
-  };
+  } | string;
 }
 
 export interface PlaceOfPerformance {
